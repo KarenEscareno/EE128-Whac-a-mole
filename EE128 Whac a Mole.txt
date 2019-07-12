@@ -1,0 +1,296 @@
+#include <LiquidCrystal.h>
+int score = 0;    
+LiquidCrystal lcd(8,9,4,5,6,7);
+int mole[5] = {12,11,10,3,2};
+    int but = 53;
+    int but1 = 52;
+    int but2 = 51;
+    int but3 = 50;
+    int but4 = 49;
+    int buttonState = 0;
+    int buttonState1 = 0;
+    int buttonState2 = 0;
+    int buttonState3 = 0;
+    int buttonState4 = 0;
+    int counter = 0;
+    int speedmin = 800;
+    int speedhigh = 1000;
+    int timer = 0;
+    int points = 0;
+    int previous = 0;
+    int errors = 0;
+    int current;
+    
+void setup() {
+  
+  // put your setup code here, to run once:
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+  lcd.setCursor(0,0);
+  lcd.print("WHAC-A-MOLE!");
+  delay(1000);
+  Serial.begin(9600);
+  
+  for(int i; i<sizeof(mole)/sizeof(int); i++) // sets mole pins to OUTPUT
+  {
+    pinMode(mole[i], OUTPUT);
+    delay(10);
+  }
+  pinMode(but, INPUT);
+  pinMode(but1, INPUT);
+  pinMode(but2, INPUT);
+  pinMode(but3, INPUT);
+  pinMode(but4, INPUT);
+  lcd.clear();
+  lcd.print("3");
+  delay(1000);
+  lcd.clear();
+  lcd.print("2");
+  delay(1000);
+  lcd.clear();
+  lcd.print("1");
+  delay(1000);
+  lcd.clear();
+  lcd.print("GO");
+  delay(1000);
+  lcd.clear();
+}
+void loop() {
+  // put your main code here, to run repeatedly:
+ if(errors < 5)
+ {
+    lcd.setCursor(0, 0);
+    lcd.print("Points: ");
+    lcd.print(points);
+    lcd.setCursor(0, 1);
+    lcd.print("Errors: ");
+    lcd.print(errors);
+
+
+    buttonState = digitalRead(but);
+    buttonState1 = digitalRead(but1);
+    buttonState2 = digitalRead(but2);
+    buttonState3 = digitalRead(but3);
+    buttonState4 = digitalRead(but4);
+
+
+    // increments errors when hits empty space
+    if(digitalRead(mole[0]) == LOW && buttonState == HIGH){ 
+      errors++;
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Points: ");
+      lcd.print(points);
+      lcd.setCursor(0, 1);
+      lcd.print("Errors: ");
+      lcd.print(errors);
+      delay(100);      
+    }
+    if(digitalRead(mole[1]) == LOW && buttonState1 == HIGH){ 
+      errors++;
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Points: ");
+      lcd.print(points);
+      lcd.setCursor(0, 1);
+      lcd.print("Errors: ");
+      lcd.print(errors);  
+      delay(100);    
+    }
+    if(digitalRead(mole[2]) == LOW && buttonState2 == HIGH){ 
+      errors++;
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Points: ");
+      lcd.print(points);
+      lcd.setCursor(0, 1);
+      lcd.print("Errors: ");
+      lcd.print(errors);
+      delay(100);      
+    }
+    if(digitalRead(mole[3]) == LOW && buttonState3 == HIGH){ 
+      errors++;
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Points: ");
+      lcd.print(points);
+      lcd.setCursor(0, 1);
+      lcd.print("Errors: ");
+      lcd.print(errors);
+      delay(100);      
+    } 
+    if(digitalRead(mole[4]) == LOW && buttonState4 == HIGH){
+      errors++;
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Points: ");
+      lcd.print(points);
+      lcd.setCursor(0, 1);
+      lcd.print("Errors: ");
+      lcd.print(errors); 
+      delay(100);     
+    }
+
+
+
+
+    // increments points when correctly hits mole 
+    if(digitalRead(mole[0]) == HIGH && buttonState == HIGH) 
+    { 
+       points++; 
+       digitalWrite(mole[0],LOW);
+       lcd.clear();
+       lcd.setCursor(0, 0);
+       lcd.print("Points: ");
+       lcd.print(points);
+       lcd.setCursor(0, 1);
+       lcd.print("Errors: ");
+       lcd.print(errors);
+       delay(200);
+    }
+       
+    if(digitalRead(mole[1]) == HIGH && buttonState1 == HIGH) 
+    { 
+       points++; 
+       digitalWrite(mole[1],LOW);
+       lcd.clear();
+       lcd.setCursor(0, 0);
+       lcd.print("Points: ");
+       lcd.print(points);
+       lcd.setCursor(0, 1);
+       lcd.print("Errors: ");
+       lcd.print(errors);
+       delay(200);
+    }
+       
+    if(digitalRead(mole[2]) == HIGH && buttonState2 == HIGH) 
+    { 
+       points++; 
+       digitalWrite(mole[2],LOW);
+       lcd.clear();
+       lcd.setCursor(0, 0);
+       lcd.print("Points: ");
+       lcd.print(points);
+       lcd.setCursor(0, 1);
+       lcd.print("Errors: ");
+       lcd.print(errors);
+       delay(200);
+    }
+        
+    if(digitalRead(mole[3]) == HIGH && buttonState3 == HIGH) 
+    { 
+       points++; 
+       digitalWrite(mole[3], LOW);
+       lcd.clear();
+       lcd.setCursor(0, 0);
+       lcd.print("Points: ");
+       lcd.print(points);
+       lcd.setCursor(0, 1);
+       lcd.print("Errors: ");
+       lcd.print(errors);
+       delay(200);
+    }
+        
+    if(digitalRead(mole[4]) == HIGH && buttonState4 == HIGH) 
+    { 
+       points++; 
+       digitalWrite(mole[4],LOW);
+       lcd.clear();
+       lcd.setCursor(0, 0);
+       lcd.print("Points: ");
+       lcd.print(points);
+       lcd.setCursor(0, 1);
+       lcd.print("Errors: ");
+       lcd.print(errors);
+       delay(200);
+    }
+        
+
+
+    current = millis();
+    if(current-previous>timer){
+        // increment errors when miss mole 
+        if(digitalRead(mole[0]) == HIGH && buttonState == LOW && (current-previous>timer))
+        {  
+           errors++;
+           lcd.clear();
+           lcd.setCursor(0, 0);
+           lcd.print("Points: ");
+           lcd.print(points);
+           lcd.setCursor(0, 1);
+           lcd.print("Errors: ");
+           lcd.print(errors);
+           digitalWrite(mole[0],LOW);
+        }
+        if(digitalRead(mole[1]) == HIGH && buttonState1 == LOW && (current-previous>timer))
+        {  
+           errors++;
+           lcd.clear();
+           lcd.setCursor(0, 0);
+           lcd.print("Points: ");
+           lcd.print(points);
+           lcd.setCursor(0, 1);
+           lcd.print("Errors: ");
+           lcd.print(errors);
+           digitalWrite(mole[1],LOW);
+        }
+        if(digitalRead(mole[2]) == HIGH && buttonState2 == LOW && (current-previous>timer))
+        {  
+           errors++;
+           lcd.clear();
+           lcd.setCursor(0, 0);
+           lcd.print("Points: ");
+           lcd.print(points);
+           lcd.setCursor(0, 1);
+           lcd.print("Errors: ");
+           lcd.print(errors);           
+           digitalWrite(mole[2],LOW);       
+        }
+        if(digitalRead(mole[3]) == HIGH && buttonState3 == LOW && (current-previous>timer))
+        {  
+           errors++;
+           lcd.clear();
+           lcd.setCursor(0, 0);
+           lcd.print("Points: ");
+           lcd.print(points);
+           lcd.setCursor(0, 1);
+           lcd.print("Errors: ");
+           lcd.print(errors);
+           digitalWrite(mole[3],LOW);
+        }
+        if(digitalRead(mole[4]) == HIGH && buttonState4 == LOW && (current-previous>timer))
+        {  
+           errors++;
+           lcd.clear();
+           lcd.setCursor(0, 0);
+           lcd.print("Points: ");
+           lcd.print(points);
+           lcd.setCursor(0, 1);
+           lcd.print("Errors: ");
+           lcd.print(errors);
+           digitalWrite(mole[4],LOW);     
+        }
+        digitalWrite(mole[random(0,sizeof(mole)/sizeof(int))],HIGH); // randomly displays moles
+        timer=random(speedmin,speedhigh); // sets mole pop-up rate to a variable
+        previous=current; // sets current millis to previous one
+        if((points%15)==0){ // speeds up mole pop-up rate every 15 points
+          if(speedmin>100){
+            speedmin-=100;
+            speedhigh-=100;
+          }
+        }
+
+
+    }
+
+
+      lcd.clear();
+ }
+           lcd.clear();
+           lcd.setCursor(0, 0);
+           lcd.print("Points: ");
+           lcd.print(points);
+           lcd.setCursor(0, 1);
+           lcd.print("Errors: ");
+           lcd.print(errors);
+  }
